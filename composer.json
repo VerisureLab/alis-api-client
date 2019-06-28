@@ -1,0 +1,16 @@
+{
+    "name": "verisure-lab/alis-api-client",
+    "type": "symfony-bundle",
+    "description": "",
+    "keywords": [],
+    "license": "MIT",
+    "authors": [],
+    "require": {
+        "php": ">=7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "VerisureLab\\Library\\AlisApiClient\\": "src/"
+        }
+    }
+}
