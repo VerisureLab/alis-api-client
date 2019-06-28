@@ -1,23 +1,23 @@
 services:
-    verisure_lab.alis_client.client:
+    verisure_lab.alis_api_client.client:
         class: VerisureLab\Library\AlisApiClient\Service\Client
         arguments:
-            - '%verisure_lab.alis_client.client_id%'
-            - '%verisure_lab.alis_client.client_secret%'
-            - '%verisure_lab.alis_client.base_uri%'
+            - '%verisure_lab.alis_api_client.client_id%'
+            - '%verisure_lab.alis_api_client.client_secret%'
+            - '%verisure_lab.alis_api_client.base_uri%'
 
-    verisure_lab.alis_client.authentication_service:
+    verisure_lab.alis_api_client.authentication_service:
         class: VerisureLab\Library\AlisApiClient\Service\AuthenticationService
         arguments:
-            - '@verisure_lab.alis_client.client'
+            - '@verisure_lab.alis_api_client.client'
             - ''
 
-    verisure_lab.alis_client.transmitter:
+    verisure_lab.alis_api_client.transmitter:
         class: VerisureLab\Library\AlisApiClient\Service\Transmitter
         arguments:
             - ''
-            - '@verisure_lab.alis_client.authentication_service'
-            - '@verisure_lab.alis_client.client'
+            - '@verisure_lab.alis_api_client.authentication_service'
+            - '@verisure_lab.alis_api_client.client'
 
 
 

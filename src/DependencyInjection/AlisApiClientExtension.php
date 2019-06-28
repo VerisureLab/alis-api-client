@@ -12,10 +12,10 @@ class AlisApiClientExtension extends ConfigurableExtension implements CompilerPa
 {
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
-        $container->setParameter('verisure_lab.alis_client.client_id', $mergedConfig['client_id']);
-        $container->setParameter('verisure_lab.alis_client.client_secret', $mergedConfig['client_secret']);
-        $container->setParameter('verisure_lab.alis_client.base_uri', $mergedConfig['base_uri']);
-        $container->setParameter('verisure_lab.alis_client.token_storage', $mergedConfig['service']['token_storage']);
+        $container->setParameter('verisure_lab.alis_api_client.client_id', $mergedConfig['client_id']);
+        $container->setParameter('verisure_lab.alis_api_client.client_secret', $mergedConfig['client_secret']);
+        $container->setParameter('verisure_lab.alis_api_client.base_uri', $mergedConfig['base_uri']);
+        $container->setParameter('verisure_lab.alis_api_client.token_storage', $mergedConfig['service']['token_storage']);
 
         $loader = new YamlFileLoader(
             $container,
@@ -27,12 +27,12 @@ class AlisApiClientExtension extends ConfigurableExtension implements CompilerPa
 
     public function process(ContainerBuilder $container)
     {
-        $tokenStorage = $container->getDefinition($container->getParameter('verisure_lab.alis_client.token_storage'));
+        $tokenStorage = $container->getDefinition($container->getParameter('verisure_lab.alis_api_client.token_storage'));
 
-        $container->getDefinition('verisure_lab.alis_client.authentication_service')
+        $container->getDefinition('verisure_lab.alis_api_client.authentication_service')
             ->setArgument(1, $tokenStorage);
 
-        $container->getDefinition('verisure_lab.alis_client.transmitter')
+        $container->getDefinition('verisure_lab.alis_api_client.transmitter')
             ->setArgument(0, $tokenStorage);
     }
 }
