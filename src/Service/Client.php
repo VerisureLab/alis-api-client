@@ -95,7 +95,6 @@ class Client
         return $this->handleRequest('POST', '/leads', [
             \GuzzleHttp\RequestOptions::HEADERS => [
                 'Authorization' => 'Bearer '.$token,
-                'X-Access-Type' => 'customer',
             ],
             \GuzzleHttp\RequestOptions::JSON => $requestData
         ]);
