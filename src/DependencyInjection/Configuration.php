@@ -14,9 +14,9 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('base_uri')->isRequired()->cannotBeEmpty()->end()
                 ->arrayNode('connections')
                     ->arrayPrototype()
-                        ->scalarNode('base_uri')->isRequired()->cannotBeEmpty()->end()
                         ->arrayNode('service')
                             ->children()
                                 ->scalarNode('authentication_service')->isRequired()->cannotBeEmpty()->end()
