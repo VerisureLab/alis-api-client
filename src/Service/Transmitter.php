@@ -2,8 +2,10 @@
 
 namespace VerisureLab\Library\AlisApiClient\Service;
 
+use GuzzleHttp\Client;
+use VerisureLab\Library\AAAApiClient\Exception\ClientRequestException;
+use VerisureLab\Library\AAAApiClient\Service\AuthenticationService;
 use VerisureLab\Library\AlisApiClient\Exception\AuthenticationRequiredException;
-use VerisureLab\Library\AlisApiClient\Exception\ClientRequestException;
 use VerisureLab\Library\AlisApiClient\Exception\TokenNotFoundException;
 use VerisureLab\Library\AlisApiClient\Exception\TransmitLeadException;
 use VerisureLab\Library\AlisApiClient\ValueObject\Credentials;
@@ -26,11 +28,16 @@ class Transmitter
      */
     private $client;
 
-    public function __construct(TokenStorageInterface $tokenStorage, AuthenticationService $authenticationService, Client $client)
+    public function __construct(TokenStorageInterface $tokenStorage, AuthenticationService $authenticationService, string $baseUri)
     {
         $this->tokenStorage = $tokenStorage;
         $this->authenticationService = $authenticationService;
-        $this->client = $client;
+
+        $this->client = new Client([
+            'base_uri' => $baseUri,
+            'timeout' => 5,
+            'http_errors' => true,
+        ]);
     }
 
     /**
@@ -41,27 +48,34 @@ class Transmitter
      * @param null|Credentials $credentials
      *
      * @return string
+     *
      * @throws TransmitLeadException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function send(string $sourceId, Lead $lead, ?Credentials $credentials = null): string
     {
         try {
-            $responseData = $this->client->postLead(
-                $this->getBearerToken($credentials),
-                [
+            $response = $this->client->post('/leads', [
+                \GuzzleHttp\RequestOptions::HEADERS => [
+                    'Authorization' => 'Bearer '.$this->getBearerToken($credentials),
+                    'X-Access-Type' => 'customer',
+                ],
+                \GuzzleHttp\RequestOptions::JSON => [
                     'source' => sprintf('/sources/%s', $sourceId),
                     'phoneNumber' => $lead->getPhoneNumber(),
                     'zipCode' => $lead->getZipCode(),
                     'data' => $lead->getData(),
                 ]
-            );
+            ]);
         } catch (TokenNotFoundException $e) {
             throw new AuthenticationRequiredException('No token found', 500, $e);
+        } catch (ClientRequestException $e) {
+            throw new AuthenticationRequiredException('Cannot refresh token', 500, $e);
         } catch (\Exception $e) {
             throw new TransmitLeadException($sourceId, $lead, $e);
         }
 
-        return $responseData['id'];
+        return json_decode($response->getBody()->getContents(), true)['id'];
     }
 
     /**
@@ -72,6 +86,7 @@ class Transmitter
      * @return string
      *
      * @throws \Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function getBearerToken(?Credentials $credentials = null): string
     {
@@ -100,6 +115,4 @@ class Transmitter
 
         return $token->getAccessToken();
     }
-
-
 }

@@ -2,9 +2,9 @@
 
 namespace VerisureLab\Library\AlisApiClient\Service;
 
+use VerisureLab\Library\AAAApiClient\ValueObject\Token;
 use VerisureLab\Library\AlisApiClient\Exception\CannotSaveTokenException;
 use VerisureLab\Library\AlisApiClient\Exception\TokenNotFoundException;
-use VerisureLab\Library\AlisApiClient\ValueObject\Token;
 
 interface TokenStorageInterface
 {
