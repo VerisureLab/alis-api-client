@@ -31,6 +31,7 @@ class Source
     public static function fromAllData(string $name, string $supplierId, string $channelId): self
     {
         $blacklist = new static();
+        $blacklist->name = $name;
         $blacklist->supplierId = $supplierId;
         $blacklist->channelId = $channelId;
 
