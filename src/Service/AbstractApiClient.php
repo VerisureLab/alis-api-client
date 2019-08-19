@@ -9,7 +9,7 @@ use VerisureLab\Library\AlisApiClient\Exception\AuthenticationRequiredException;
 use VerisureLab\Library\AlisApiClient\Exception\TokenNotFoundException;
 use VerisureLab\Library\AlisApiClient\ValueObject\Credentials;
 
-abstract class AbstractApiClient
+abstract class AbstractApiClient implements ApiClientInterface
 {
     /**
      * @var TokenStorageInterface

@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use VerisureLab\Library\AlisApiClient\Service\ApiClient;
 use VerisureLab\Library\AlisApiClient\Service\ClientBlacklist;
 use VerisureLab\Library\AlisApiClient\Service\ClientChannel;
 use VerisureLab\Library\AlisApiClient\Service\ClientLead;
@@ -33,19 +34,29 @@ class AlisApiClientExtension extends ConfigurableExtension implements CompilerPa
             ];
 
             $clientLeadDefinition = $container->register('verisure_lab.alis_api_client.'.$connectionName.'.client.lead', ClientLead::class);
-            $clientLeadDefinition->setArguments($clientArguments);
+            $clientLeadDefinition->setArguments($clientArguments)->addTag('verisure_lab.alis_api_client.client', ['alias' => 'lead']);
 
             $clientChannelDefinition = $container->register('verisure_lab.alis_api_client.'.$connectionName.'.client.channel', ClientChannel::class);
-            $clientChannelDefinition->setArguments($clientArguments);
+            $clientChannelDefinition->setArguments($clientArguments)->addTag('verisure_lab.alis_api_client.client', ['alias' => 'channel']);
 
             $clientSourceDefinition = $container->register('verisure_lab.alis_api_client.'.$connectionName.'.client.source', ClientSource::class);
-            $clientSourceDefinition->setArguments($clientArguments);
+            $clientSourceDefinition->setArguments($clientArguments)->addTag('verisure_lab.alis_api_client.client', ['alias' => 'source']);
 
             $clientSupplierDefinition = $container->register('verisure_lab.alis_api_client.'.$connectionName.'.client.supplier', ClientSupplier::class);
-            $clientSupplierDefinition->setArguments($clientArguments);
+            $clientSupplierDefinition->setArguments($clientArguments)->addTag('verisure_lab.alis_api_client.client', ['alias' => 'supplier']);
 
             $clientBlacklistDefinition = $container->register('verisure_lab.alis_api_client.'.$connectionName.'.client.blacklist', ClientBlacklist::class);
-            $clientBlacklistDefinition->setArguments($clientArguments);
+            $clientBlacklistDefinition->setArguments($clientArguments)->addTag('verisure_lab.alis_api_client.client', ['alias' => 'blacklist']);
+
+            $clientDefinition = $container->register('verisure_lab.alis_api_client.'.$connectionName.'.client', ApiClient::class);
+
+            $taggedServices = $container->findTaggedServiceIds('verisure_lab.alis_api_client.client');
+
+            foreach ($taggedServices as $id => $tags) {
+                foreach ($tags as $attributes) {
+                    $clientDefinition->addMethodCall('addClient', [$attributes['alias'], new Reference($id)]);
+                }
+            }
         }
     }
 }
