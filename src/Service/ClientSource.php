@@ -14,6 +14,7 @@ class ClientSource extends AbstractApiClient
     {
         return $this->callCreate([
             'name' => $source->getName(),
+            'code' => $source->getCode(),
             'supplier' => '/suppliers/'.$source->getSupplierId(),
             'channel' => '/channels/'.$source->getChannelId(),
         ], $credentials);
@@ -23,6 +24,7 @@ class ClientSource extends AbstractApiClient
     {
         return $this->callUpdate($id, [
             'name' => $source->getName(),
+            'code' => $source->getCode(),
             'supplier' => '/suppliers/'.$source->getSupplierId(),
             'channel' => '/channels/'.$source->getChannelId(),
         ], $credentials);

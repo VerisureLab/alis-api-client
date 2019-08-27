@@ -12,6 +12,11 @@ class Source
     /**
      * @var string
      */
+    private $code;
+
+    /**
+     * @var string
+     */
     private $supplierId;
 
     /**
@@ -23,15 +28,17 @@ class Source
      * Factory from name and code
      *
      * @param string $name
+     * @param string $code
      * @param string $supplierId
      * @param string $channelId
      *
      * @return Source
      */
-    public static function fromAllData(string $name, string $supplierId, string $channelId): self
+    public static function fromAllData(string $name, string $code, string $supplierId, string $channelId): self
     {
         $blacklist = new static();
         $blacklist->name = $name;
+        $blacklist->code = $code;
         $blacklist->supplierId = $supplierId;
         $blacklist->channelId = $channelId;
 
@@ -46,6 +53,16 @@ class Source
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode(): string
+    {
+        return $this->code;
     }
 
     /**
