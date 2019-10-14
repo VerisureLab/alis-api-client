@@ -10,23 +10,27 @@ use VerisureLab\Library\AlisApiClient\ValueObject\Source;
  */
 class ClientSource extends AbstractApiClient
 {
-    public function create(Source $source, ?Credentials $credentials = null): string
+    public function create(Source $source, ?Credentials $credentials = null, bool $allowExtraFields = true, bool $allowMissingFields = true): string
     {
         return $this->callCreate([
             'name' => $source->getName(),
             'code' => $source->getCode(),
             'supplier' => '/suppliers/'.$source->getSupplierId(),
             'channel' => '/channels/'.$source->getChannelId(),
+            'allowExtraFields' => $allowExtraFields,
+            'allowMissingFields' => $allowMissingFields,
         ], $credentials);
     }
 
-    public function update(string $id, Source $source, ?Credentials $credentials = null): array
+    public function update(string $id, Source $source, ?Credentials $credentials = null, bool $allowExtraFields = true, bool $allowMissingFields = true): array
     {
         return $this->callUpdate($id, [
             'name' => $source->getName(),
             'code' => $source->getCode(),
             'supplier' => '/suppliers/'.$source->getSupplierId(),
             'channel' => '/channels/'.$source->getChannelId(),
+            'allowExtraFields' => $allowExtraFields,
+            'allowMissingFields' => $allowMissingFields,
         ], $credentials);
     }
 
